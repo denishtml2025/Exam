@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PastPapers · admin dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-container">
+
+  <!-- AUTH -->
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo"><i class="fa-solid fa-file-lines"></i></div>
+        <h1>PastPapers</h1>
+        <p id="authSub">Sign in to continue</p>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="input-group"><label for="liEmail"><i class="fa-solid fa-envelope"></i> Email</label>
+          <input id="liEmail" type="email" placeholder="you@example.com" required autocomplete="username"></div>
+        <div class="input-group"><label for="liPass"><i class="fa-solid fa-lock"></i> Password</label>
+          <input id="liPass" type="password" placeholder="Your password" required autocomplete="current-password"></div>
+        <button class="auth-btn" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
+        <p class="switch-link">New student? <a id="toSignup">Create an account</a></p>
+      </form>
+
+      <form id="signupForm" class="auth-form hidden">
+        <div class="input-group"><label for="suName"><i class="fa-solid fa-user"></i> Full name</label>
+          <input id="suName" type="text" placeholder="Your name" required></div>
+        <div class="input-group"><label for="suEmail"><i class="fa-solid fa-envelope"></i> Email</label>
+          <input id="suEmail" type="email" placeholder="you@example.com" required autocomplete="username"></div>
+        <div class="input-group"><label for="suPass"><i class="fa-solid fa-lock"></i> Password</label>
+          <input id="suPass" type="password" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password"></div>
+        <button class="auth-btn" type="submit"><i class="fa-solid fa-user-plus"></i> Create account</button>
+        <p class="switch-link">Already registered? <a id="toLogin">Sign in</a></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <main id="dashboard" class="dashboard hidden">
+    <div class="top-bar">
+      <div class="brand"><i class="fa-solid fa-file-lines"></i>
+        <div><h1>PastPapers</h1><small id="welcome"></small></div></div>
+      <div class="user-area">
+        <span class="role-badge" id="roleBadge"></span>
+        <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>
+      </div>
+    </div>
+
+    <div class="stats-row" id="stats"></div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="papers"><i class="fa-solid fa-folder-open"></i> Papers</button>
+      <button class="tab-btn" data-tab="payments"><i class="fa-solid fa-mobile-screen"></i> Payments</button>
+      <button class="tab-btn admin-only" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+    </div>
+
+    <!-- Papers -->
+    <section class="panel active" id="panel-papers">
+      <div class="section-card admin-only">
+        <div class="section-card-title"><h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload a paper</h3></div>
+        <form id="uploadForm" class="settings-grid">
+          <div class="settings-field"><label for="upTitle">Title</label>
+            <input id="upTitle" required placeholder="e.g. Biology Paper 1 – Mid-term"></div>
+          <div class="settings-field"><label for="upSubject">Subject</label>
+            <select id="upSubject"><option>Biology</option><option>Agriculture</option><option>Chemistry</option><option>Physics</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Other</option></select></div>
+          <div class="settings-field"><label for="upLevel">Class</label>
+            <select id="upLevel"><option>Form 1</option><option>Form 2</option><option selected>Form 3</option><option>Form 4</option><option>Grade 10</option></select></div>
+          <div class="settings-field"><label for="upYear">Year</label>
+            <input id="upYear" type="number" min="1990" max="2100" required></div>
+          <div class="settings-field" style="grid-column:1/-1"><label for="upFile">File (PDF, DOC, DOCX – max 20 MB)</label>
+            <div class="file-input-wrapper"><input id="upFile" type="file" accept=".pdf,.doc,.docx" required></div></div>
+        </form>
+        <div class="settings-actions"><button class="btn-sm" type="submit" form="uploadForm"><i class="fa-solid fa-upload"></i> Upload paper</button></div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-card-title"><h3><i class="fa-solid fa-list"></i> Papers</h3>
+          <input id="search" class="search" type="search" placeholder="Search papers"></div>
+        <div class="table-wrapper"><table>
+          <thead><tr><th>Paper</th><th>Subject</th><th>Class · Year</th><th>Action</th></tr></thead>
+          <tbody id="paperBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Payments -->
+    <section class="panel" id="panel-payments">
+      <div class="section-card">
+        <div class="section-card-title"><h3><i class="fa-solid fa-receipt"></i> <span id="payTitle">Payments</span></h3></div>
+        <div class="table-wrapper"><table>
+          <thead><tr><th>Paper</th><th>Student</th><th>M-Pesa code</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="payBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section class="panel" id="panel-settings">
+      <div class="section-card">
+        <div class="section-card-title"><h3><i class="fa-solid fa-mobile-screen"></i> M-Pesa details</h3></div>
+        <form id="settingsForm">
+          <div class="settings-grid">
+            <div class="settings-field"><label for="sPhone">M-Pesa number / Till</label><input id="sPhone" required></div>
+            <div class="settings-field"><label for="sName">Account name</label><input id="sName" required></div>
+            <div class="settings-field"><label for="sPrice">Price per paper (KSh, 0 = free)</label><input id="sPrice" type="number" min="0" required></div>
+          </div>
+          <div class="settings-actions"><button class="btn-sm success" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save settings</button></div>
+        </form>
+      </div>
+      <div class="section-card">
+        <div class="section-card-title"><h3><i class="fa-solid fa-key"></i> Admin password</h3></div>
+        <form id="passForm">
+          <div class="settings-grid"><div class="settings-field"><label for="sNewPass">New password</label>
+            <input id="sNewPass" type="password" minlength="6" required autocomplete="new-password"></div></div>
+          <div class="settings-actions"><button class="btn-sm" type="submit"><i class="fa-solid fa-check"></i> Update password</button></div>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- PAY MODAL -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal-card">
+    <div class="modal-header"><i class="fa-solid fa-mobile-screen-button"></i>
+      <h2 id="mTitle">Unlock paper</h2><p id="mPaper"></p></div>
+    <div class="payment-details">
+      <div class="payment-detail-row"><span class="label">Send to</span><span class="value phone" id="mPhone"></span></div>
+      <div class="payment-detail-row"><span class="label">Name</span><span class="value" id="mName"></span></div>
+      <div class="payment-detail-row"><span class="label">Amount</span><span class="value" id="mAmount"></span></div>
+    </div>
+    <div class="mpesa-steps"><strong>How to pay</strong>
+      1. Open M-Pesa and choose Send Money or Lipa na M-Pesa.<br>
+      2. Enter the number and amount above.<br>
+      3. Paste the confirmation code below.</div>
+    <form id="payForm" class="modal-actions">
+      <div class="settings-field"><label for="mCode">M-Pesa confirmation code</label>
+        <input id="mCode" required maxlength="12" pattern="[A-Za-z0-9]{8,12}" placeholder="e.g. SJK4X9ABCD" style="text-transform:uppercase"></div>
+      <button class="modal-btn-primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Submit payment</button>
+      <button class="modal-btn-secondary" type="button" id="mCancel">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast-message" id="toast" role="status"><i class="fa-solid fa-circle-check"></i><span id="toastText"></span></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
